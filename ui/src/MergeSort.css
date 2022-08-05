@@ -1,0 +1,88 @@
+.nav-bar {
+  display: flex;
+  gap: 1rem;
+  background-color: #385e72;
+  padding: 1rem;
+}
+
+.nav-bar button {
+  background-color: #6aabd2;
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  border: none;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
+  border-radius: 4px;
+}
+
+.nav-bar button:hover {
+  background-color: #b7cfdc;
+  color: black;
+}
+
+.merge-sort {
+  display: flex;
+  justify-content: center;
+}
+
+.array-container {
+  display: flex;
+  width: min(80rem, 70vw);
+  justify-content: center;
+  align-items: stretch;
+  gap: 1px;
+  margin: unset;
+  padding: unset;
+}
+
+.array-element {
+  flex: 1 1 100%;
+  list-style: none;
+  background-color: pink;
+  color: white;
+  font-weight: bold;
+  display: flex;
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  display: flex;
+  justify-content: center;
+}
+
+.range-input {
+  display: flex;
+  /* justify-content: center; */
+  align-items: center;
+  gap: 15px;
+}
+
+.range-input input[type="range"] {
+  border: 1px solid white;
+}
+
+.range-input label {
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+}
+
+.range-input span {
+  font-weight: bold;
+  font-size: 18px;
+  color: white;
+}
+
+.input-container {
+  margin-left: 1rem;
+}
+
+@media (max-width: 40em) {
+  .array-element {
+    border: none !important;
+  }
+  .nav-bar {
+    flex-direction: column;
+  }
+}

@@ -1,16 +1,10 @@
-use rand::{self, Rng};
+use rand::Rng;
 
-fn main() {
-    merge_sort_helper(5);
-}
-
-fn merge_sort_helper(size: usize) -> (Vec<u8>, Vec<u8>, Vec<(usize, usize, bool)>) {
-    // let unsorted: Vec<u8> = rand::random();
+pub fn merge_sort_helper(size: usize) -> (Vec<u8>, Vec<u8>, Vec<(usize, usize, bool)>) {
     let mut rng = rand::thread_rng();
 
     let unsorted: Vec<u8> = (0..size).map(|_| rng.gen()).collect::<Vec<u8>>();
 
-    println!(" {:?}\n", unsorted);
     let unsorted_with_index: Vec<(u8, usize)> =
         unsorted.iter().enumerate().map(|(i, v)| (*v, i)).collect();
 
@@ -50,7 +44,6 @@ fn merge_sort(
         );
         let mut second_half = merge_sort(&list[mid..].to_vec(), mid_index, top_index, swap_tracker);
 
-        // println!("{} {} {}", bottom_index, mid_index, top_index);
         merge(&mut fist_half, &mut second_half, swap_tracker)
     } else {
         list.to_vec()
@@ -69,30 +62,12 @@ fn merge(
     let size_right = right.len();
     let (mut i, mut j) = (0, 0);
 
-    // println!(
-    //     "left_starting_index {} , right_starting_index {}",
-    //     left_starting_index, right_starting_index
-    // );
-    // println!("{:?} ⤋ {:?}", left, right);
-    // println!(
-    //     "({}) ({})",
-    //     left_starting_index + i,
-    //     right_starting_index + j
-    // );
-
     while i < size_left && j < size_right {
         if left[i].0 < right[j].0 {
-            println!("{:?} {:?}", left[i], right[j]);
             merged.push(left[i]);
-            println!(" {:?}\n", merged);
             move_tracker.push((left[i].1, right[j].1, false));
-            println!("{:?} {:?}", left[i], right[j]);
-            println!("({} {} {})", left[i].1, right[j].1, false);
-            println!("{:?}", move_tracker);
             i += 1;
         } else {
-            println!("{:?} {:?}", left[i], right[j]);
-
             move_tracker.push((left[i].1, right[j].1, true));
             // let tmp = b.1;
             right[j].1 = left[i].1;
@@ -104,10 +79,6 @@ fn merge(
             left[i].1 += 1;
 
             merged.push(right[j]);
-            println!(" {:?}\n", merged);
-            println!("{:?} {:?}", left[i], right[j]);
-            println!("({} {} {})", left[i].1, right[j].1, true);
-            println!("{:?}", move_tracker);
             j += 1;
         }
     }
@@ -122,39 +93,34 @@ fn merge(
         merged.push(right[j]);
         j += 1;
     }
-    println!(" {:?}\n", merged);
 
     merged
 }
 
 #[cfg(test)]
 mod tests {
-    use crate::merge_sort_helper;
+    // use super::*;
+    use crate::merge_sort::merge_sort_helper;
+    use rand::Rng;
 
     #[test]
-    fn replay_animation() {
-        let (unsorted, sorted, animations) = merge_sort_helper(7);
-        println!("\n{:?}\n", animations);
-        let mut tmp = unsorted.clone();
-        // println!("{:?}\n{:?}\n{:?}", unsorted, sorted, tmp);
-        for (i, j, b) in animations.iter() {
-            let i = *i as usize;
-            let j = *j as usize;
-            println!("\n{:?}", tmp);
-            println!("{} {} {}", i, j, b);
-            // tmp[i] = unsorted[j];
-            if *b && i != j {
-                let temp = tmp[j];
-                println!("{} {} {}", i, j, temp);
-                tmp.remove(j);
-                tmp.insert(i, temp);
-                println!("{:?}", tmp);
+    fn test_animations() {
+        let mut rng = rand::thread_rng();
+        for _ in 0..100 {
+            let size: usize = rng.gen_range(7..999);
+            let (unsorted, sorted, animations) = merge_sort_helper(size);
+            let mut tmp = unsorted.clone();
+            for (i, j, b) in animations.iter() {
+                let i = *i as usize;
+                let j = *j as usize;
+                if *b && i != j {
+                    let temp = tmp[j];
+                    tmp.remove(j);
+                    tmp.insert(i, temp);
+                }
             }
+
+            assert_eq!(tmp, sorted);
         }
-        println!(
-            "\nunsorted {:?}\nsorted   {:?}\nreconstr {:?}\n",
-            unsorted, sorted, tmp
-        );
-        assert_eq!(tmp, sorted);
     }
 }

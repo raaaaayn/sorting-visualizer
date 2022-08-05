@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>hello-wasm example</title>
+  </head>
+  <body>
+    <script type="module">
+      import init, {
+        get_merge_sort_animations,
+      } from "./pkg/sorting_visualiser.js";
+      init().then(() => {
+        const [unsorted, sorted, animationsRaw] = get_merge_sort_animations(7);
+        const animations = animationsRaw.reduce((r, a, i) => {
+          if (i % 2) {
+            r[r.length - 1].push(a);
+          } else {
+            r.push([a]);
+          }
+          return r;
+        }, []);
+      });
+    </script>
+  </body>
+</html>

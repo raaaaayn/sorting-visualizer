@@ -7,7 +7,9 @@
 ![image](https://img.shields.io/badge/Rust-000000?style=for-the-badge&logo=rust&logoColor=white)
 
 _Sorting Algorithm visualiser built using WebAssembly and React 👀_
-[![](misc/demo.gif)](https://mkosir.github.io/react-parallax-tilt/?path=/story/react-parallax-tilt--glare-effect)
+
+[![merge-sort]](https://user-images.githubusercontent.com/12910777/183264929-33554bc5-1201-4c24-ac6f-a5a275f2696e.mp4)
+
 
 <!-- ## [Demo 💥](https://mkosir.github.io/react-parallax-tilt) -->
 

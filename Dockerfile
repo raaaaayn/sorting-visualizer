@@ -6,4 +6,5 @@ COPY ui ./
 RUN npm run build
 
 FROM arm32v7/nginx:alpine
-COPY --from=frontend-buildstep /build /usr/share/nginx/html
+COPY --from=frontend-buildstep /dist /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/nginx.conf

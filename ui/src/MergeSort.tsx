@@ -60,12 +60,15 @@ const MergeSort: FC<{
   );
 
   const mergeSort = async () => {
-    if (animations.length > 0 && animations[0].length > 0) {
-      for (let i = 0; i < animations.length; i++) {
+    if (animations.length > 0) {
+      for (let i = 0; i < animations.length - 2; i = i + 3) {
         if (!staaaphItt.current) {
           inProgress.current = true;
-          const [idx1, idx2, toExchange] = animations[i];
-
+          const [idx1, idx2, toExchange] = [
+            animations[i],
+            animations[i + 1],
+            animations[i + 2],
+          ];
           // highlights the current elements that are being compared
           setUnsorted((currentUnsorted) => {
             let { h: h1 } = currentUnsorted[idx1];
@@ -76,39 +79,31 @@ const MergeSort: FC<{
             });
             return updated;
           });
-
           if (toExchange) {
             await sleep(animationSpeed.current);
-
             // marks the current elements that are to be exchanged
             setUnsorted((currentUnsorted) => {
               const { h: h1 } = currentUnsorted[idx1];
               const { h: h2 } = currentUnsorted[idx2];
               const color = notOk;
-
               let updated = update(currentUnsorted, {
                 [idx1]: { $set: { h: h1, color } },
                 [idx2]: { $set: { h: h2, color } },
               });
-
               return updated;
             });
             await sleep(animationSpeed.current / 4);
-
             // shifting the elements in the array and marking the elements that have been exhanged
             setUnsorted((currentUnsorted) => {
               let first = currentUnsorted[idx1];
               let second = currentUnsorted[idx2];
               const color = initalColor;
-
               let updated = update(currentUnsorted, {
                 $splice: [[idx2, 1]],
               });
               updated.splice(idx1, 0, second);
-
               first = updated[idx1];
               second = updated[idx1 + 1];
-
               updated[idx1] = { ...first, color };
               updated[idx1 + 1] = { ...second, color };
               return updated;

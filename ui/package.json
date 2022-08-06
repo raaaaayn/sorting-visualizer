@@ -14,17 +14,14 @@
     "immutability-helper": "^3.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-scripts": "5.0.1",
     "react-transition-group": "^4.4.4",
     "sorting-visualiser": "file:pkg",
     "typescript": "^4.7.4",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "vite",
+    "build": "vite build"
   },
   "eslintConfig": {
     "extends": [
@@ -45,6 +42,9 @@
     ]
   },
   "devDependencies": {
-    "@types/react-transition-group": "^4.4.5"
+    "@types/react-transition-group": "^4.4.5",
+    "@vitejs/plugin-react": "1.1.1",
+    "vite": "^2.7",
+    "vite-plugin-wasm": "^1.0.1"
   }
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef, useCallback, FC } from "react";
 import { InitOutput, Sort } from "sorting-visualiser";
 
-import MergeSort, { initalColor } from "./MergeSort";
+import MergeSort, { initialColor } from "./MergeSort";
 
 import "./App.css";
 
@@ -13,7 +13,7 @@ const App: FC<{ wasm: InitOutput }> = ({ wasm }) => {
   const [unsorted, setUnsorted] = useState<Array<{ h: number; color: string }>>(
     []
   );
-  const [animations, setAnimations] = useState<Array<Array<number>>>([]);
+  const [animations, setAnimations] = useState<Uint32Array>();
   const [arraySize, setArraySize] = useState(40);
   const staaaphItt = useRef(false);
   const inProgress = useRef(false);
@@ -23,7 +23,8 @@ const App: FC<{ wasm: InitOutput }> = ({ wasm }) => {
     inProgress.current = false;
     const memory = wasm.memory;
 
-    const sort = Sort.new(arraySize);
+    // const sort = Sort.new(arraySize);
+    const sort = Sort.new_quick_sort(arraySize);
     const animationsLength = sort.animations_length();
 
     const unsortedPtr = sort.get_unsorted();
@@ -36,9 +37,11 @@ const App: FC<{ wasm: InitOutput }> = ({ wasm }) => {
       animationsLength
     );
 
-    const properArr = Array.from(unsorted as number[]).map((el: number) => {
-      return { h: el, color: initalColor };
-    });
+    const properArr = Array.from(unsorted as unknown as Array<number>).map(
+      (el: number) => {
+        return { h: el, color: initialColor };
+      }
+    );
 
     setUnsorted(properArr);
     setOgUnsorted(properArr);
@@ -55,19 +58,21 @@ const App: FC<{ wasm: InitOutput }> = ({ wasm }) => {
 
   // return null;
 
-  return (
-    <MergeSort
-      generateNewArray={generateNewArray}
-      unsorted={unsorted}
-      ogUnsorted={ogUnsorted}
-      setUnsorted={setUnsorted}
-      animations={animations}
-      arraySize={arraySize}
-      setArraySize={setArraySize}
-      staaaphItt={staaaphItt}
-      inProgress={inProgress}
-    />
-  );
+  if (animations)
+    return (
+      <MergeSort
+        generateNewArray={generateNewArray}
+        unsorted={unsorted}
+        ogUnsorted={ogUnsorted}
+        setUnsorted={setUnsorted}
+        animations={animations}
+        arraySize={arraySize}
+        setArraySize={setArraySize}
+        staaaphItt={staaaphItt}
+        inProgress={inProgress}
+      />
+    );
+  return null;
 };
 
 export default App;

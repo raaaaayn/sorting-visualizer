@@ -1,7 +1,9 @@
 mod merge_sort;
+mod quick_sort;
 
 // use js_sys;
 use merge_sort::merge_sort_helper;
+use quick_sort::quick_sort_helper;
 use wasm_bindgen::prelude::*;
 
 #[wasm_bindgen]
@@ -15,6 +17,16 @@ impl Sort {
     pub fn new(size: Option<usize>) -> Sort {
         let size = size.unwrap_or(40);
         let (unsorted, _sorted, animations) = merge_sort_helper(size);
+        let unsorted: Vec<u32> = unsorted.iter().map(|x| *x as u32).collect();
+
+        Sort {
+            array: unsorted,
+            animations,
+        }
+    }
+    pub fn new_quick_sort(size: Option<usize>) -> Sort {
+        let size = size.unwrap_or(40);
+        let (unsorted, _sorted, animations) = quick_sort_helper(size);
         let unsorted: Vec<u32> = unsorted.iter().map(|x| *x as u32).collect();
 
         Sort {

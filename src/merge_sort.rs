@@ -109,7 +109,7 @@ mod tests {
     use rand::Rng;
 
     #[test]
-    fn test_animations() {
+    fn test_merge_sort_animations() {
         let mut rng = rand::thread_rng();
         for _ in 0..100 {
             let size: usize = rng.gen_range(7..999);

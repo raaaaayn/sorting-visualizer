@@ -15,7 +15,7 @@ const notOk = "#F51720";
 // const finalColor = "#9b7acb";
 const finalColor = "rgba(169, 92, 232, 0.8)";
 // const independence = "#545775ff";
-export const initalColor = "rgba(66, 134, 244, 0.8)";
+export const initialColor = "rgba(66, 134, 244, 0.8)";
 
 const MergeSort: FC<{
   unsorted: Array<{
@@ -27,7 +27,7 @@ const MergeSort: FC<{
     color: string;
   }>;
   generateNewArray: () => void;
-  animations: Array<Array<number>>;
+  animations: Uint32Array;
   arraySize: number;
   setArraySize: React.Dispatch<number>;
   setUnsorted: React.Dispatch<
@@ -58,6 +58,119 @@ const MergeSort: FC<{
   const [animationSpeedDisplay, setAnimationSpeedDisplay] = useState(
     300 - animationSpeed.current
   );
+
+  const quickSort = async () => {
+    if (animations.length > 0) {
+      for (let i = 0; i < animations.length - 1; i = i + 4) {
+        if (!staaaphItt.current) {
+          inProgress.current = true;
+          const [pivotIdx, idx1, idx2, toExchange] = [
+            animations[i],
+            animations[i + 1],
+            animations[i + 2],
+            animations[i + 3],
+          ];
+          let firstOgColor = initialColor;
+          let secondOgColor = initialColor;
+
+          // highlights the current elements that are being compared
+          setUnsorted((currentUnsorted) => {
+            let pivot = currentUnsorted[pivotIdx];
+            let first = currentUnsorted[idx1];
+            let second = currentUnsorted[idx2];
+
+            // returns compared colors back to their original colors if not being exhanged
+            firstOgColor = first.color;
+            secondOgColor = second.color;
+
+            let updated = update(currentUnsorted, {
+              [pivotIdx]: { $set: { ...pivot, color: "#82eefd" } },
+              [idx1]: { $set: { ...first, color: compareColor } },
+              [idx2]: { $set: { ...second, color: compareColor } },
+            });
+            return updated;
+          });
+          await sleep(animationSpeed.current / 2);
+
+          if (toExchange) {
+            // marks the current elements that are to be exchanged
+            setUnsorted((currentUnsorted) => {
+              const first = currentUnsorted[idx1];
+              const second = currentUnsorted[idx2];
+              const color = notOk;
+              let updated = update(currentUnsorted, {
+                [idx1]: { $set: { ...first, color } },
+                [idx2]: { $set: { ...second, color } },
+              });
+              return updated;
+            });
+
+            if (toExchange === 1) {
+              // exchanging the elements in the array and marking the elements that have been exhanged
+              setUnsorted((currentUnsorted) => {
+                let first = currentUnsorted[idx1];
+                let second = currentUnsorted[idx2];
+                const color = initialColor;
+
+                let updated = update(currentUnsorted, {
+                  [idx1]: { $set: { ...second, color } },
+                  [idx2]: { $set: { ...first, color } },
+                });
+                return updated;
+              });
+              await sleep(animationSpeed.current / 2);
+            } else {
+              // final postions of pivot elements
+              setUnsorted((currentUnsorted) => {
+                let _pivot = currentUnsorted[pivotIdx];
+                let first = currentUnsorted[idx1];
+                let second = currentUnsorted[idx2];
+                const color = finalColor;
+
+                console.log({ pivotIdx, idx1, idx2 });
+
+                let updated = update(currentUnsorted, {
+                  // [pivotIdx]: { $set: { ...pivot, color: initialColor } },
+                  [idx1]: { $set: { ...second, color: initialColor } },
+                  [idx2]: { $set: { ...first, color } },
+                });
+                return updated;
+              });
+              await sleep(animationSpeed.current / 4);
+            }
+          } else {
+            // not to be exchanged
+            setUnsorted((currentUnsorted) => {
+              const first = currentUnsorted[idx1];
+              const second = currentUnsorted[idx2];
+              const color = initialColor;
+
+              let updated = update(currentUnsorted, {
+                [idx1]: { $set: { ...first, color: firstOgColor } },
+                [idx2]: { $set: { ...second, color: secondOgColor } },
+              });
+              return updated;
+            });
+            // await sleep(animationSpeed.current / 2);
+          }
+        }
+        inProgress.current = false;
+      }
+
+      await sleep(100);
+      setUnsorted((currentUnsorted) => {
+        return currentUnsorted.map((el) => {
+          return { ...el, color: "#32CD30" };
+        });
+      });
+      await sleep(500);
+      setUnsorted((currentUnsorted) => {
+        return currentUnsorted.map((el) => {
+          return { ...el, color: finalColor };
+        });
+      });
+    }
+  };
 
   const mergeSort = async () => {
     if (animations.length > 0) {
@@ -97,7 +210,7 @@ const MergeSort: FC<{
             setUnsorted((currentUnsorted) => {
               let first = currentUnsorted[idx1];
               let second = currentUnsorted[idx2];
-              const color = initalColor;
+              const color = initialColor;
               let updated = update(currentUnsorted, {
                 $splice: [[idx2, 1]],
               });
@@ -125,7 +238,7 @@ const MergeSort: FC<{
             setUnsorted((currentUnsorted) => {
               const { h: h1 } = currentUnsorted[idx1];
               const { h: h2 } = currentUnsorted[idx2];
-              const color = initalColor;
+              const color = initialColor;
               // no need to exchange
               let updated = update(currentUnsorted, {
                 [idx1]: { $set: { h: h1, color } },
@@ -204,7 +317,8 @@ const MergeSort: FC<{
                 console.log(inProgress.current);
                 staaaphItt.current = false;
                 setUnsorted(ogUnsorted);
-                mergeSort();
+                quickSort();
+                // mergeSort();
               }
             }}
           >
